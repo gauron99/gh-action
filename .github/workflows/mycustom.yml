@@ -1,0 +1,13 @@
+name: my-custom-action
+
+on: [pull_request]
+
+jobs:
+  meet-greet:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: gauron99/gh-action@main
+      with:
+        who-to-greet: "King"
+        version: 1.15
+
