@@ -1,0 +1,19 @@
+name: 'gauron custom GH action'
+description: 'This action does custom stuff for it is custom'
+inputs:
+  who-to-greet:
+    description: 'Tell me your name'
+    required: true
+    default: 'King'
+  version:
+    description: 'Provide version to download'
+    required: true
+    default: 4.15
+outputs:
+  time:
+    description: 'Time of greeting'
+  current-version:
+    description: 'Print out the version you chose'
+runs:
+  using: 'node16'
+  main: 'index.js'
