@@ -6,8 +6,8 @@ try {
   const nameToGreet = core.getInput('who-to-greet');
   const version = core.getInput('version');
 
-  console.log("Hey there ${nameToGreet}");
-  console.log("I see you're using ${version} version, nice!");
+  console.log(`Hey there ${nameToGreet}`);
+  console.log(`I see you're using ${version} version, nice!`);
 
   // save time of greeting
   const time = (new Date().toTimeString());
