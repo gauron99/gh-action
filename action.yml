@@ -7,7 +7,6 @@ inputs:
     default: 'King'
   version:
     description: 'Provide version to download'
-    required: true
     default: '4.15'
 outputs:
   time:
