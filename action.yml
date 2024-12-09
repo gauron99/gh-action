@@ -2,12 +2,10 @@ name: 'gauron custom GH action'
 description: 'This action does custom stuff for it is custom'
 inputs:
   os:
-    description: 'Operating System you want to download binary for'
-    required: false
-    default: 'func_linux_amd64'
+    description: 'Operating System you want to download binary for(exact string expected), otherwise will be determined via the GH Runner'
   version:
-    description: 'Provide version to download'
-    default: '4.16' #default to latest -- must be updated
+    description: 'Provide version to download using the "knative-" prefix version'
+    default: 'v1.16.1' #default to latest -- must be updated
 outputs:
   time:
     description: 'Time of execution'

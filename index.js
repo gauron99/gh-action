@@ -4,6 +4,29 @@ const github = require('@actions/github');
 
 const os_values = ['func_linux_amd64'];
 
+
+// detect os system in Github Actions
+function getOsInfo() {
+  const runnerOS = process.env.RUNNER_OS;
+  const runnerArch = process.env.RUNNER_ARCH;
+
+  if (runnerOS === 'Linux') {
+    switch (runnerArch) {
+      case 'X64': return 'func_linux_amd64';
+      case 'ARM64': return 'func_linux_arm64';
+      case 'PPC64LE': return 'func_linux_ppc64le';
+      case 'S390X': return 'func_linux_s390x';
+      default: return 'unknown';
+    }
+  } else if (runnerOS === 'macOS') {
+    return runnerArch === 'X64' ? 'func_darwin_amd64' : 'func_darwin_arm64';
+  } else if (runnerOS === 'Windows') {
+    return 'func_windows_amd64';
+  } else {
+    return 'unknown';
+  }
+}
+
 // smartVersionParse will check validity of given version and fill in the parts
 // to make it correct if possible.
 // Ex.: '1.16' or 'v1.16' will return 'v1.16.0'
@@ -26,21 +49,23 @@ function smartVersionUpdate(version){
   }
 }
 
-// smartOsParser will check validity of the given os and try to match its
-// actuall binary name. Ex.: giving 'linux' might rewrite to 'func_linux_amd64'
-function smartOsParse(os){
-  //TODO: change this to match this functions description
-  return os_values.includes(os)
-}
 // -------------------------------------------------------------------------- \\
 try {
 	// default values
 	// const default_url = `https://github.com/knative/func/releases/download/knative-${default_version}/${default_os}`
 
   // Fetch value of inputs specified in action.yml
-  const os = core.getInput('os');
+  let os = core.getInput('os');
   let version = core.getInput('version');
   
+  if (os == "" || os == undefined){
+    // if not user-defined, use GH Runner determination
+    os = getOsInfo()
+    if (os == "unknown"){
+      core.setFailed("Invalid os determination, got unknown")
+    }
+  }
+
   version = smartVersionUpdate(version)
   // os = smartOsParse(os) // TODO: this function needs to be updated first
 
