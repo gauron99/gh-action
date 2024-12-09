@@ -57,6 +57,7 @@ try {
   let os = core.getInput('os');
   let version = core.getInput('version');
   
+  console.log(`${version}/${os}`)
   if (os == "" || os == undefined){
     // if not user-defined, use GH Runner determination
     os = getOsInfo()
@@ -65,6 +66,7 @@ try {
     }
   }
 
+  console.log(`${version}/${os}`)
   version = smartVersionUpdate(version)
   // os = smartOsParse(os) // TODO: this function needs to be updated first
 
