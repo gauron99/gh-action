@@ -1,13 +1,11 @@
 name: my-custom-action
-
 on: [pull_request,workflow_dispatch]
 
 jobs:
-  meet-greet:
+  func:
     runs-on: ubuntu-latest
     steps:
     - uses: gauron99/gh-action@main
       with:
-        who-to-greet: "King"
-        version: 1.15
-
+        version: 1.16
+        os: 'func_linux_amd64'

@@ -1,16 +1,16 @@
 name: 'gauron custom GH action'
 description: 'This action does custom stuff for it is custom'
 inputs:
-  who-to-greet:
-    description: 'Tell me your name'
-    required: true
-    default: 'King'
+  os:
+    description: 'Operating System you want to download binary for'
+    required: false
+    default: 'func_linux_amd64'
   version:
     description: 'Provide version to download'
-    default: '4.15'
+    default: '4.16' #default to latest -- must be updated
 outputs:
   time:
-    description: 'Time of greeting'
+    description: 'Time of execution'
 runs:
   using: 'node16'
   main: 'index.js'
