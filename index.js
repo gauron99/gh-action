@@ -14,7 +14,8 @@ function smartVersionParse(version){
     return;
   }
   versionRegex = /^(v?)(?<major>\d+)\.(?<minor>\d+)$/;
-  if (version.match(versionRegex)) {
+  let match = version.match(versionRegex)
+  if (match){
     const prefix = 'v';
     return `${prefix}${match.groups.major}.${match.groups.minor}.0`;
   } else {
