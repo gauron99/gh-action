@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec')
+const path = require('path')
+const fs = require('fs')
 
 // detect os system in Github Actions and determine binary name
 function getBinName() {
@@ -75,7 +77,7 @@ async function run(){
   
     //check if downloaded successfully
     binPath = path.Join(process.cwd(), )
-    if (!FileSystem.existsSync(binPath,bin)){
+    if (!fs.existsSync(binPath,bin)){
       core.setFailed("Download failed, couldn't find the binary on disk")
     }
 
