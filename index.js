@@ -80,8 +80,12 @@ async function moveToDestination(bin){
   return bin
 }
 
+// add func binary to PATH
 function addBinToPath(binPath){
-  exec.exec(`export PATH=$PATH:${binPath}`)
+  if(!process.env.PATH.includes(binPath)){
+    process.env.PATH= `${binPath}${path.delimiter}${process.env.PATH}`
+    core.info(`${binPath} added to $PATH`)
+  }
 }
 
 // -------------------------------------------------------------------------- \\
