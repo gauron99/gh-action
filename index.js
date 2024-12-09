@@ -76,7 +76,7 @@ async function run(){
     await exec.exec(cmd)
   
     //check if downloaded successfully
-    binPath = path.Join(process.cwd(), )
+    binPath = path.join(process.cwd(), )
     if (!fs.existsSync(binPath,bin)){
       core.setFailed("Download failed, couldn't find the binary on disk")
     }
