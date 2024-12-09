@@ -71,11 +71,13 @@ async function moveToDestination(bin){
   if (destination != undefined && destination != "") {
     console.log(`Moving the binary to ${destination}`)
     await exec.exec(`mv ${bin} ${destination}`)
+  
+    if (fs.statSync(destination).isDirectory()) {
+      return destination + bin
+    }
+    return destination
   }
-  if (fs.statsSync(destination).isDirectory()) {
-    return destination + bin
-  }
-  return destination
+  return bin
 }
 
 function addBinToPath(binPath){
@@ -113,7 +115,7 @@ async function run(){
     finalBin = moveToDestination(bin)
 
     // run 'func version'
-    exec.exec(`finalBin version`)
+    exec.exec(`${finalBin} version`)
 
   } catch (error) {
     core.setFailed(error.message)
