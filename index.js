@@ -29,14 +29,14 @@ function smartOsParse(os){
   //TODO: change this to match this functions description
   return os_values.includes(os)
 }
-
+// -------------------------------------------------------------------------- \\
 try {
 	// default values
 	// const default_url = `https://github.com/knative/func/releases/download/knative-${default_version}/${default_os}`
 
   // Fetch value of inputs specified in action.yml
   const os = core.getInput('os');
-  const version = core.getInput('version');
+  let version = core.getInput('version');
   
   version = smartVersionParse(version)
   // os = smartOsParse(os) // TODO: this function needs to be updated first
