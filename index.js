@@ -68,7 +68,7 @@ try {
   version = smartVersionUpdate(version)
   // os = smartOsParse(os) // TODO: this function needs to be updated first
 
- 	var url = `https://github.com/knative/func/releases/download/knative-${version}/${os}`;
+ 	var url = `https://github.com/knative/func/releases/download/${version}/${os}`;
   console.log(`FINAL URL IS :${url}`) 
 	
  	// do this after: curl -SLO $program_url && mv func_linux_amd64 f && chmod +x f
