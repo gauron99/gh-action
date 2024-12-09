@@ -86,7 +86,7 @@ async function run(){
 
     // do this after: curl -SLO $program_url && mv func_linux_amd64 f && chmod +x f
     const destination = core.getInput('destination')
-    if (destination != undefined) {
+    if (destination != undefined && destination != "") {
       console.log(`Moving the binary to ${destination}`)
       await exec.exec(`mv ${bin} ${destination}`)
     }
