@@ -31,9 +31,9 @@ function getOsInfo() {
 // to make it correct if possible.
 // Ex.: '1.16' or 'v1.16' will return 'v1.16.0'
 function smartVersionUpdate(version){
-  var versionRegex = /^(v?\d+\.\d+)(\.d+)?$/;
+  var versionRegex = /^(v?\d+\.\d+)(\.\d+)?$/;
   if (!versionRegex.test(version)){
-    core.setFailed('Invalid version format. Expected format: "1.16[.X]" or "v1.16[.X]"');
+    core.setFailed(`Invalid version format (${version}). Expected format: "1.16[.X]" or "v1.16[.X]"`);
     return;
   }
   versionRegex = /^(v?)(?<major>\d+)\.(?<minor>\d+)(.(?<patch>\d+))?$/;
@@ -68,11 +68,6 @@ try {
 
   version = smartVersionUpdate(version)
   // os = smartOsParse(os) // TODO: this function needs to be updated first
-
-  if (!(smartOsParse(os))){
-    core.setFailed(`Invalid OS format. Expected values are: ${os_values}`);
-    return;
-  }
 
  	var url = `https://github.com/knative/func/releases/download/knative-${version}/${os}`;
   console.log(`FINAL URL IS :${url}`) 
