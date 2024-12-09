@@ -46,6 +46,7 @@ function smartVersionUpdate(version){
 }
 
 // -------------------------------------------------------------------------- \\
+async function run(){
 try {
 	// default values
 	// const default_url = `https://github.com/knative/func/releases/download/knative-${default_version}/${default_os}`
@@ -96,4 +97,5 @@ try {
 
 } catch (error) {
   core.setFailed(error.message)
+}
 }
