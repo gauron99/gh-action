@@ -2,7 +2,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs');
+const { pathToFileURL } = require('url');
 
 // detect os system in Github Actions and determine binary name
 function getBinName() {
@@ -71,6 +72,14 @@ async function moveToDestination(bin){
     console.log(`Moving the binary to ${destination}`)
     await exec.exec(`mv ${bin} ${destination}`)
   }
+  if (fs.statSync(destination).isDirectory()) {
+    return destination + bin
+  }
+  return destination
+}
+
+function addBinToPath(binPath){
+  exec.exec(`export PATH=$PATH:${binPath}`)
 }
 
 // -------------------------------------------------------------------------- \\
@@ -97,12 +106,14 @@ async function run(){
     // construct, run and set as executable from now on
     cmdConstrunctAndRun(url,bin)
    
-    // move to destination if aplicable
-    moveToDestination(bin)
+    // add final binary to PATH specifically
+    addBinToPath(bin)
 
-    // save time of greeting
-    const time = (new Date().toTimeString());
-    core.setOutput("time",time)
+    // move to destination if aplicable
+    finalBin = moveToDestination(bin)
+
+    // run 'func version'
+    exec.exec(`finalBin version`)
 
   } catch (error) {
     core.setFailed(error.message)
