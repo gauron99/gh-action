@@ -1,12 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const exec = require('@actions/exec')
 
-
-const os_values = ['func_linux_amd64'];
-
-
-// detect os system in Github Actions
-function getOsInfo() {
+// detect os system in Github Actions and determine binary name
+function getBinName() {
   const runnerOS = process.env.RUNNER_OS;
   const runnerArch = process.env.RUNNER_ARCH;
 
@@ -54,26 +51,44 @@ try {
 	// const default_url = `https://github.com/knative/func/releases/download/knative-${default_version}/${default_os}`
 
   // Fetch value of inputs specified in action.yml
-  let os = core.getInput('os');
+  let os = core.getInput('binary');
   let version = core.getInput('version');
   
-  console.log(`${version}/${os}`)
-  if (os == "" || os == undefined){
+  console.log(`${version}/${bin}`)
+  if (bin == "" || bin == undefined){
     // if not user-defined, use GH Runner determination
-    os = getOsInfo()
-    if (os == "unknown"){
-      core.setFailed("Invalid os determination, got unknown")
+    bin = getBinName()
+    if (bin == "unknown"){
+      core.setFailed("Invalid bin determination, got unknown")
     }
   }
 
-  console.log(`${version}/${os}`)
+  console.log(`${version}/${bin}`)
   version = smartVersionUpdate(version)
-  // os = smartOsParse(os) // TODO: this function needs to be updated first
 
- 	var url = `https://github.com/knative/func/releases/download/${version}/${os}`;
+ 	var url = `https://github.com/knative/func/releases/download/${version}/${bin}`;
   console.log(`FINAL URL IS :${url}`) 
 	
- 	// do this after: curl -SLO $program_url && mv func_linux_amd64 f && chmod +x f
+  // construct command
+  const cmd = `curl -LJO "${url}"`
+
+  await exec.exec(cmd)
+  
+  //check if downloaded successfully
+  binPath = path.Join(process.cwd(), )
+  if (!FileSystem.existsSync(binPath,bin)){
+    core.setFailed("Download failed, couldn't find the binary on disk")
+  }
+
+  //set to executable
+  await exec.exec(`chmod +x ${bin}`)
+
+  // do this after: curl -SLO $program_url && mv func_linux_amd64 f && chmod +x f
+  const destination = core.getInput('destination')
+  if (destination != undefined) {
+    console.log(`Moving the binary to ${destination}`)
+    await exec.exec(`mv ${bin} ${destination}`)
+  }
 
   // save time of greeting
   const time = (new Date().toTimeString());
