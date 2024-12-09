@@ -9,6 +9,10 @@ function isVersionValid(version){
   return versRegEx.test(version);
 }
 
+function isOsValid(os){
+  return os_values.includes(os)
+}
+
 try {
 	// default values
 	// const default_url = `https://github.com/knative/func/releases/download/knative-${default_version}/${default_os}`
