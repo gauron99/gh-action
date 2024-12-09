@@ -7,17 +7,20 @@ const os_values = ['func_linux_amd64'];
 // smartVersionParse will check validity of given version and fill in the parts
 // to make it correct if possible.
 // Ex.: '1.16' or 'v1.16' will return 'v1.16.0'
-function smartVersionParse(version){
+function smartVersionUpdate(version){
   var versionRegex = /^(v?\d+\.\d+)(\.d+)?$/;
   if (!versionRegex.test(version)){
     core.setFailed('Invalid version format. Expected format: "1.16[.X]" or "v1.16[.X]"');
     return;
   }
-  versionRegex = /^(v?)(?<major>\d+)\.(?<minor>\d+)$/;
+  versionRegex = /^(v?)(?<major>\d+)\.(?<minor>\d+)(.(?<patch>\d+))?$/;
   let match = version.match(versionRegex)
   if (match){
     const prefix = 'v';
-    return `${prefix}${match.groups.major}.${match.groups.minor}.0`;
+    if (match.groups.patch == "") {
+      match.groups.patch = 0
+    }
+    return `${prefix}${match.groups.major}.${match.groups.minor}.${match.groups.patch}`;
   } else {
     return version;
   }
@@ -38,7 +41,7 @@ try {
   const os = core.getInput('os');
   let version = core.getInput('version');
   
-  version = smartVersionParse(version)
+  version = smartVersionUpdate(version)
   // os = smartOsParse(os) // TODO: this function needs to be updated first
 
   if (!(smartOsParse(os))){
