@@ -17,7 +17,7 @@ function smartVersionUpdate(version){
   let match = version.match(versionRegex)
   if (match){
     const prefix = 'v';
-    if (match.groups.patch == "") {
+    if (match.groups.patch == undefined) {
       match.groups.patch = 0
     }
     return `${prefix}${match.groups.major}.${match.groups.minor}.${match.groups.patch}`;
