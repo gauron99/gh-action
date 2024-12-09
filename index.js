@@ -72,7 +72,7 @@ async function moveToDestination(bin){
     console.log(`Moving the binary to ${destination}`)
     await exec.exec(`mv ${bin} ${destination}`)
   }
-  if (fs.statSync(destination).isDirectory()) {
+  if (fs.statsSync(destination).isDirectory()) {
     return destination + bin
   }
   return destination
