@@ -48,7 +48,7 @@ function smartVersionUpdate(version){
 }
 
 // construct the cmd to download the func binary, run it, set as executable
-async function cmdConstrunctAndRun(url){
+async function cmdConstrunctAndRun(url,bin){
    // construct command
    const cmd = `curl -LJO "${url}"`
 
@@ -95,7 +95,7 @@ async function run(){
     console.log(`URL: ${url}`) 
 	
     // construct, run and set as executable from now on
-    cmdConstrunctAndRun(url)
+    cmdConstrunctAndRun(url,bin)
    
     // move to destination if aplicable
     moveToDestination(bin)
