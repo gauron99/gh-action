@@ -47,55 +47,57 @@ function smartVersionUpdate(version){
 
 // -------------------------------------------------------------------------- \\
 async function run(){
-try {
-	// default values
-	// const default_url = `https://github.com/knative/func/releases/download/knative-${default_version}/${default_os}`
+  try {
+	  // default values
+	  // const default_url = `https://github.com/knative/func/releases/download/knative-${default_version}/${default_os}`
 
-  // Fetch value of inputs specified in action.yml
-  let os = core.getInput('binary');
-  let version = core.getInput('version');
+    // Fetch value of inputs specified in action.yml
+    let os = core.getInput('binary');
+    let version = core.getInput('version');
   
-  console.log(`${version}/${bin}`)
-  if (bin == "" || bin == undefined){
-    // if not user-defined, use GH Runner determination
-    bin = getBinName()
-    if (bin == "unknown"){
-      core.setFailed("Invalid bin determination, got unknown")
+    console.log(`${version}/${bin}`)
+    if (bin == "" || bin == undefined){
+      // if not user-defined, use GH Runner determination
+      bin = getBinName()
+      if (bin == "unknown"){
+        core.setFailed("Invalid bin determination, got unknown")
+      }
     }
-  }
 
-  console.log(`${version}/${bin}`)
-  version = smartVersionUpdate(version)
+    console.log(`${version}/${bin}`)
+    version = smartVersionUpdate(version)
 
- 	var url = `https://github.com/knative/func/releases/download/${version}/${bin}`;
-  console.log(`FINAL URL IS :${url}`) 
+  	var url = `https://github.com/knative/func/releases/download/${version}/${bin}`;
+    console.log(`FINAL URL IS :${url}`) 
 	
-  // construct command
-  const cmd = `curl -LJO "${url}"`
+    // construct command
+    const cmd = `curl -LJO "${url}"`
 
-  await exec.exec(cmd)
+    await exec.exec(cmd)
   
-  //check if downloaded successfully
-  binPath = path.Join(process.cwd(), )
-  if (!FileSystem.existsSync(binPath,bin)){
-    core.setFailed("Download failed, couldn't find the binary on disk")
+    //check if downloaded successfully
+    binPath = path.Join(process.cwd(), )
+    if (!FileSystem.existsSync(binPath,bin)){
+      core.setFailed("Download failed, couldn't find the binary on disk")
+    }
+
+    //set to executable
+    await exec.exec(`chmod +x ${bin}`)
+
+    // do this after: curl -SLO $program_url && mv func_linux_amd64 f && chmod +x f
+    const destination = core.getInput('destination')
+    if (destination != undefined) {
+      console.log(`Moving the binary to ${destination}`)
+      await exec.exec(`mv ${bin} ${destination}`)
+    }
+
+    // save time of greeting
+    const time = (new Date().toTimeString());
+    core.setOutput("time",time)
+
+  } catch (error) {
+    core.setFailed(error.message)
   }
-
-  //set to executable
-  await exec.exec(`chmod +x ${bin}`)
-
-  // do this after: curl -SLO $program_url && mv func_linux_amd64 f && chmod +x f
-  const destination = core.getInput('destination')
-  if (destination != undefined) {
-    console.log(`Moving the binary to ${destination}`)
-    await exec.exec(`mv ${bin} ${destination}`)
-  }
-
-  // save time of greeting
-  const time = (new Date().toTimeString());
-  core.setOutput("time",time)
-
-} catch (error) {
-  core.setFailed(error.message)
 }
-}
+
+run();
