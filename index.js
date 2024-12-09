@@ -31,22 +31,21 @@ function getOsInfo() {
 // to make it correct if possible.
 // Ex.: '1.16' or 'v1.16' will return 'v1.16.0'
 function smartVersionUpdate(version){
-  var versionRegex = /^(v?\d+\.\d+)(\.\d+)?$/;
-  if (!versionRegex.test(version)){
-    core.setFailed(`Invalid version format (${version}). Expected format: "1.16[.X]" or "v1.16[.X]"`);
-    return;
-  }
-  versionRegex = /^(v?)(?<major>\d+)\.(?<minor>\d+)(.(?<patch>\d+))?$/;
-  let match = version.match(versionRegex)
+  versionRegex = /^(?<knprefix>knative-)?(?<prefix>v?)(?<major>\d+)\.(?<minor>\d+)(.(?<patch>\d+))?$/;
+  let match = version.match(versionRegex);
   if (match){
+    if (match.groups.knprefix == undefined){
+      match.groups.knprefix = "";
+    }
     const prefix = 'v';
     if (match.groups.patch == undefined) {
-      match.groups.patch = 0
+      match.groups.patch = 0;
     }
-    return `${prefix}${match.groups.major}.${match.groups.minor}.${match.groups.patch}`;
-  } else {
-    return version;
-  }
+    return `${match.groups.knprefix}${prefix}${match.groups.major}.${match.groups.minor}.${match.groups.patch}`;
+  } 
+
+  core.setFailed(`Invalid version format (${version}). Expected format: "1.16[.X]" or "v1.16[.X]"`);
+  return undefined;
 }
 
 // -------------------------------------------------------------------------- \\
