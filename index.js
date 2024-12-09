@@ -47,6 +47,32 @@ function smartVersionUpdate(version){
   return undefined;
 }
 
+// construct the cmd to download the func binary, run it, set as executable
+async function cmdConstrunctAndRun(cmd,bin){
+   // construct command
+   const cmd = `curl -LJO "${url}"`
+
+   await exec.exec(cmd)
+ 
+   //check if downloaded successfully
+   binPath = path.join(process.cwd(), bin)
+   if (!fs.existsSync(binPath)){
+     core.setFailed("Download failed, couldn't find the binary on disk")
+   }
+
+   // set to executable
+   await exec.exec(`chmod +x ${bin}`)
+}
+
+// move func binary where desired
+async function moveToDestination(bin){
+  const destination = core.getInput('destination')
+  if (destination != undefined && destination != "") {
+    console.log(`Moving the binary to ${destination}`)
+    await exec.exec(`mv ${bin} ${destination}`)
+  }
+}
+
 // -------------------------------------------------------------------------- \\
 async function run(){
   try {
@@ -55,41 +81,24 @@ async function run(){
     let bin = core.getInput('binary');
     let version = core.getInput('version');
   
-    console.log(`${version}/${bin}`)
+    // if not user-defined, use GH Runner determination
     if (bin == "" || bin == undefined){
-      // if not user-defined, use GH Runner determination
       bin = getBinName()
       if (bin == "unknown"){
         core.setFailed("Invalid bin determination, got unknown")
       }
     }
 
-    console.log(`${version}/${bin}`)
     version = smartVersionUpdate(version)
 
   	var url = `https://github.com/knative/func/releases/download/${version}/${bin}`;
-    console.log(`FINAL URL IS :${url}`) 
+    console.log(`URL: ${url}`) 
 	
-    // construct command
-    const cmd = `curl -LJO "${url}"`
-
-    await exec.exec(cmd)
-  
-    //check if downloaded successfully
-    binPath = path.join(process.cwd(), )
-    if (!fs.existsSync(binPath,bin)){
-      core.setFailed("Download failed, couldn't find the binary on disk")
-    }
-
-    //set to executable
-    await exec.exec(`chmod +x ${bin}`)
-
-    // do this after: curl -SLO $program_url && mv func_linux_amd64 f && chmod +x f
-    const destination = core.getInput('destination')
-    if (destination != undefined && destination != "") {
-      console.log(`Moving the binary to ${destination}`)
-      await exec.exec(`mv ${bin} ${destination}`)
-    }
+    // construct, run and set as executable from now on
+    cmdConstrunctAndRun(url)
+   
+    // move to destination if aplicable
+    moveToDestination(bin)
 
     // save time of greeting
     const time = (new Date().toTimeString());
