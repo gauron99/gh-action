@@ -1,9 +1,11 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 const exec = require('@actions/exec')
 const path = require('path')
 const fs = require('fs');
-const { pathToFileURL } = require('url');
+
+
+// change this accordingly
+const DEFAULT_FUNC_VERSION = 'knative-v1.16.1'
 
 // detect os system in Github Actions and determine binary name
 function getBinName() {
@@ -78,20 +80,27 @@ async function run(){
   try {
 
     // Fetch value of inputs specified in action.yml or use defaults
-    let bin = core.getInput('binary') || getBinName();
-    if (bin == "unknown"){
+
+    // osBin refers to the exact name match of an existing binary available to
+    // download
+    const osBin = core.getInput('binary') || getBinName();
+    if (osBin == "unknown"){
       core.setFailed("Invalid bin determination, got unknown");
     }
-    let version = core.getInput('version');
-    let destination = core.getInput('destination') || process.cwd();
+    // version to be downloaded
+    let version = core.getInput('version') || DEFAULT_FUNC_VERSION
+    // destination is a directory where to download the Func
+    const destination = core.getInput('destination') || process.cwd();
+    // bin refers to the name of the binary (Func) that will be downloaded (this
+    // is what it will be called)
+    const bin = core.getInput('name') || 'func';
 
-    version = smartVersionUpdate(version)
+    version = smartVersionUpdate(version);
 
-  	var url = `https://github.com/knative/func/releases/download/${version}/${bin}`;
+  	var url = `https://github.com/knative/func/releases/download/${version}/${osBin}`;
     console.log(`URL: ${url}`);
 	
-
-    fullPathBin = path.resolve(destination,bin)
+    fullPathBin = path.resolve(destination,bin);
 
     // download Func
     await cmdConstructAndRun(url,fullPathBin);

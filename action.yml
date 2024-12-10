@@ -1,16 +1,14 @@
 name: 'gauron custom GH action'
 description: 'This action does custom stuff for it is custom'
 inputs:
+  name:
+    description: '(optional) Name of the Function binary (defaults to "func"'
   binary:
-    description: 'Binary you want to download (exact string expected), otherwise will be determined via the OS of GH Runner'
+    description: '(optional) Binary you want to download (exact string expected), otherwise will be determined via the OS of GH Runner'
   version:
-    description: 'Provide version to download'
-    default: 'knative-v1.16.1' #default to latest -- must be updated
+    description: '(optional) Provide version to download'
   destination:
-    description: '(Optional) Provide a path where to move the desired downloaded binary, otherwise cwd is used'
-outputs:
-  time:
-    description: 'Time of execution'
+    description: '(optional) Provide a path where to move the desired downloaded binary, otherwise cwd is used'
 runs:
   using: 'node16'
   main: 'index.js'
