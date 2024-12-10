@@ -113,7 +113,7 @@ async function run(){
     await addBinToPath(fullPathBin);
     
     // run 'func version'
-    await exec.exec(`${bin} version`);
+    await exec.exec(`${fullPathBin} version`);
 
   } catch (error) {
     core.setFailed(error.message);
