@@ -120,7 +120,8 @@ async function run(){
    
     // move to destination if aplicable
     fullPathBin = await moveToDestination(bin);
-    await exec.exec(`pwd && ls -la`)
+    await exec.exec(`pwd`)
+    await exec.exec(`ls -la`)
     await exec.exec(`chmod +x ${fullPathBin}`);
 
     // add final binary to PATH specifically
