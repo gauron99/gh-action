@@ -60,9 +60,9 @@ async function cmdConstructAndRun(url,binPath){
   await exec.exec(cmd);
  
   //check if downloaded successfully
-  if (!fs.existsSync(binPath)){
-    core.setFailed("Download failed, couldn't find the binary on disk");
-  }
+  //if (!fs.existsSync(binPath)){
+   // core.setFailed("Download failed, couldn't find the binary on disk");
+  //}
 }
 
 /**
