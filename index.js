@@ -65,7 +65,6 @@ async function cmdConstructAndRun(url,binPath){
   }
 
   await exec.exec(`chmod +x ${fullPathBin}`);
-  await exec.exec(`ls -la`)
 }
 
 /**
@@ -76,8 +75,6 @@ async function addBinToPath(binPath){
     // This will write to $GITHUB_PATH, making it available for subsequent steps
     fs.appendFileSync(process.env.GITHUB_PATH, `\n${binPath}`);
     process.env.PATH = process.env.PATH + path.delimiter + binPath;
-    await exec.exec('echo', [`$PATH`], {shell: 'bash'});
-    await exec.exec('echo', [`$GITHUB_PATH`], { shell: 'bash'});
     core.info(`${binPath} added to $PATH`);
 }
 
@@ -115,7 +112,7 @@ async function run(){
     // add final binary to PATH specifically
     await addBinToPath(fullPathBin);
     
-    await exec.exec(`which ${bin}`)
+    await exec.exec('which',[`${bin}`]);
 
     // run 'func version'
     await exec.exec(`${bin} version`);
