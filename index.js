@@ -121,11 +121,12 @@ async function run(){
     // move to destination if aplicable
     fullPathBin = await moveToDestination(bin)
 
+    await exec.exec(`chmod +x ${fullPathBin}`);
+
     // add final binary to PATH specifically
     addBinToPath(fullPathBin);
 
     bin = path.basename(fullPathBin);
-    await exec.exec(`chmod +x ${bin}`);
 
     // run 'func version'
     exec.exec(`${bin} version`);
