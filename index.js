@@ -50,24 +50,26 @@ function smartVersionUpdate(version){
 
 // construct the cmd to download the func binary, run it, set as executable
 async function cmdConstrunctAndRun(url,bin){
-   // construct command
-   const cmd = `curl -LJO "${url}"`;
-
-   await exec.exec(cmd);
+  // construct command
+  const cmd = `curl -LJO "${url}"`;
+  // execute
+  await exec.exec(cmd);
  
-   //check if downloaded successfully
-   binPath = path.join(process.cwd(), bin);
-   if (!fs.existsSync(binPath)){
-     core.setFailed("Download failed, couldn't find the binary on disk");
-   }
+  //check if downloaded successfully
+  binPath = path.join(process.cwd(), bin);
+  if (!fs.existsSync(binPath)){
+    core.setFailed("Download failed, couldn't find the binary on disk");
+  }
 
-   // set to executable
-   await exec.exec(`chmod +x ${bin}`);
+  // set to executable
+  await exec.exec(`chmod +x ${bin}`);
 }
 
 // move func binary where desired
 async function moveToDestination(bin){
+  console.log("movetoDest");
   const destination = core.getInput('destination');
+  console.log(`dest: ${destination}`);
   if (destination != undefined && destination != "") {
     console.log(`Moving the binary to ${destination}`);
     await exec.exec(`mv ${bin} ${destination}`);
@@ -83,7 +85,6 @@ async function moveToDestination(bin){
 // add func binary to PATH
 function addBinToPath(bin){
   binPath = path.join(path.resolve('.'),bin);
-  console.log(`addToPath>> '${bin},${binPath}'`);
   if(!process.env.PATH.includes(binPath)){
     process.env.PATH= `${binPath}${path.delimiter}${process.env.PATH}`;
     core.info(`${binPath} added to $PATH`);
