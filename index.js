@@ -56,8 +56,7 @@ async function cmdConstructAndRun(url,bin){
   await exec.exec(cmd);
  
   //check if downloaded successfully
-  binPath = path.join(path.resolve('.'), bin);
-  if (!fs.existsSync(binPath)){
+  if (!fs.existsSync(path.resolve('.'), bin)){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
 }
@@ -80,18 +79,17 @@ async function moveToDestination(bin){
     }
     return destination;
   }
-  return path.join(path.resolve('.'),bin);
+  return path.resolve('.',bin);
 }
 
 /**
  * add func binary to PATH (binPath includes the full path of the binary)
  * @param {string} binPath 
  *  */ 
-function addBinToPath(binPath){
-  if(!process.env.PATH.includes(binPath)){
-    process.env.PATH= `${binPath}${path.delimiter}${process.env.PATH}`;
+async function addBinToPath(binPath){
+    await exec.exec('echo', [`"${process.env.PATH}:${binPath}" >> $GITHUB_ENV`], { shell: 'bash' });
+    await exec.exec('which', [`${path.basename(binPath)}`])
     core.info(`${binPath} added to $PATH`);
-  }
 }
 
 // -------------------------------------------------------------------------- \\
@@ -124,7 +122,7 @@ async function run(){
     await exec.exec(`chmod +x ${fullPathBin}`);
 
     // add final binary to PATH specifically
-    addBinToPath(fullPathBin);
+    await addBinToPath(fullPathBin);
 
     bin = path.basename(fullPathBin);
 
