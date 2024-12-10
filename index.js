@@ -79,6 +79,7 @@ async function moveToDestination(bin){
     }
     return destination;
   }
+  console.log(path.join(path.resolve('.'),bin))
   return path.join(path.resolve('.'),bin);
 }
 
