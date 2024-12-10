@@ -60,9 +60,6 @@ async function cmdConstrunctAndRun(url,bin){
   if (!fs.existsSync(binPath)){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
-
-  // set to executable
-  await exec.exec(`chmod +x ${bin}`);
 }
 
 /**
@@ -74,7 +71,6 @@ async function cmdConstrunctAndRun(url,bin){
  */
 async function moveToDestination(bin){
   const destination = core.getInput('destination');
-  console.log(`moveToDest: ${destination}`);
   if (destination != undefined && destination != "") {
     console.log(`Moving the binary to ${destination}`);
     await exec.exec(`mv ${bin} ${destination}`);
@@ -129,6 +125,7 @@ async function run(){
     addBinToPath(fullPathBin);
 
     bin = path.basename(fullPathBin);
+    await exec.exec(`chmod +x ${bin}`);
 
     // run 'func version'
     exec.exec(`${bin} version`);
