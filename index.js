@@ -48,47 +48,28 @@ function smartVersionUpdate(version){
   return undefined;
 }
 
+/**
+ * @param {string} url - Full url to be curled
+ * @param {string} binPath - Full target path of the binary
+ */
 // construct the cmd to download the func binary, run it, set as executable
-async function cmdConstructAndRun(url,bin){
-  // construct command
-  const cmd = `curl -LJO "${url}"`;
-  // execute
+async function cmdConstructAndRun(url,binPath){
+  const cmd = `curl -L -o "${binPath} ${url}"`;
   await exec.exec(cmd);
  
   //check if downloaded successfully
-  if (!fs.existsSync(path.resolve('.'), bin)){
+  if (!fs.existsSync(binPath)){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
 }
 
 /**
- * Move func binary to desired destination (if any) and return the full path
- * of said binary. If not moved, return its full path at the current location.
- * 
- * @param {string} bin - Name of the binary
- * @returns {string} - Full path of the final binary
- */
-async function moveToDestination(bin){
-  const destination = core.getInput('destination');
-  if (destination != undefined && destination != "") {
-    console.log(`Moving the binary to ${destination}`);
-    await exec.exec(`mv ${bin} ${destination}`);
-  
-    if (fs.statSync(destination).isDirectory()) {
-      return path.join(destination,bin);
-    }
-    return destination;
-  }
-  return path.resolve('.',bin);
-}
-
-/**
- * add func binary to PATH (binPath includes the full path of the binary)
  * @param {string} binPath 
  *  */ 
 async function addBinToPath(binPath){
-    await exec.exec('echo', [`"${process.env.PATH}:${binPath}" >> $GITHUB_ENV`], { shell: 'bash' });
-    await exec.exec('which', [`${path.basename(binPath)}`])
+    // Add the directory to PATH
+    // This will write to $GITHUB_PATH, making it available for subsequent steps
+    fs.appendFileSync(process.env.GITHUB_PATH, `\n${binPath}`);
     core.info(`${binPath} added to $PATH`);
 }
 
@@ -96,35 +77,29 @@ async function addBinToPath(binPath){
 async function run(){
   try {
 
-    // Fetch value of inputs specified in action.yml
-    let bin = core.getInput('binary');
-    let version = core.getInput('version');
-  
-    // if not user-defined, use GH Runner determination
-    if (bin == "" || bin == undefined){
-      bin = getBinName();
-      if (bin == "unknown"){
-        core.setFailed("Invalid bin determination, got unknown");
-      }
+    // Fetch value of inputs specified in action.yml or use defaults
+    let bin = core.getInput('binary') || getBinName();
+    if (bin == "unknown"){
+      core.setFailed("Invalid bin determination, got unknown");
     }
+    let version = core.getInput('version');
+    let destination = core.getInput('destination') || process.cwd();
 
     version = smartVersionUpdate(version)
 
   	var url = `https://github.com/knative/func/releases/download/${version}/${bin}`;
     console.log(`URL: ${url}`);
 	
-    // construct, run and set as executable from now on
-    await cmdConstructAndRun(url,bin);
-   
-    // move to destination if aplicable
-    fullPathBin = await moveToDestination(bin);
+
+    fullPathBin = path.resolve(destination,bin)
+
+    // download Func
+    await cmdConstructAndRun(url,fullPathBin);
 
     await exec.exec(`chmod +x ${fullPathBin}`);
 
     // add final binary to PATH specifically
     await addBinToPath(fullPathBin);
-
-    bin = path.basename(fullPathBin);
 
     // run 'func version'
     exec.exec(`${bin} version`);
