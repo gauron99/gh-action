@@ -109,7 +109,8 @@ async function run(){
     await cmdConstructAndRun(url,fullPathBin);
 
 
-    // add final binary to PATH specifically
+    // add final binary to PATH specifically and add it to GITHUB_PATH
+    // so it can be used bo subsequent 'runs'
     await addBinToPath(fullPathBin);
     
     // run 'func version'
