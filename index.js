@@ -88,7 +88,7 @@ async function run(){
     // download
     const osBin = core.getInput('binary') || getBinName();
     if (osBin == "unknown"){
-      core.setFailed("Invalid bin determination, got unknown");
+      core.setFailed("Invalid os binary determination, try setting it specifically using 'binary'");
     }
     // version to be downloaded
     let version = core.getInput('version') || DEFAULT_FUNC_VERSION
