@@ -10,5 +10,5 @@ inputs:
   destination:
     description: '(optional) Provide a path where to move the desired downloaded binary, otherwise cwd is used'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'index.js'
