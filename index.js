@@ -55,13 +55,11 @@ async function cmdConstructAndRun(url,bin){
   // execute
   await exec.exec(cmd);
  
-  await exec.exec('pwd')
   //check if downloaded successfully
   binPath = path.join(path.resolve('.'), bin);
   if (!fs.existsSync(binPath)){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
-  await exec.exec('pwd')
 }
 
 /**
@@ -118,13 +116,11 @@ async function run(){
     console.log(`URL: ${url}`);
 	
     // construct, run and set as executable from now on
-    cmdConstructAndRun(url,bin);
+    await cmdConstructAndRun(url,bin);
    
     // move to destination if aplicable
     fullPathBin = await moveToDestination(bin);
-    console.log(`fullpath: ${fullPathBin}`)
-    await exec.exec(`pwd`)
-    await exec.exec(`ls -la`)
+
     await exec.exec(`chmod +x ${fullPathBin}`);
 
     // add final binary to PATH specifically
