@@ -73,8 +73,8 @@ async function cmdConstructAndRun(url,binPath){
 async function addBinToPath(binPath){
     // Add the directory to PATH
     // This will write to $GITHUB_PATH, making it available for subsequent steps
-    fs.appendFileSync(process.env.GITHUB_PATH, `\n${binPath}`);
-    process.env.PATH = process.env.PATH + path.delimiter + binPath;
+    fs.appendFileSync(process.env.GITHUB_PATH, `\n${path.dirname(binPath)}`);
+    process.env.PATH = process.env.PATH + path.delimiter + path.dirname(binPath);
     core.info(`${binPath} added to $PATH`);
 }
 
