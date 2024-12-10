@@ -54,7 +54,7 @@ function smartVersionUpdate(version){
  */
 // construct the cmd to download the func binary, run it, set as executable
 async function cmdConstructAndRun(url,binPath){
-  const cmd = `curl -L -o "${binPath} ${url}"`;
+  const cmd = `curl -L -o "${binPath}" "${url}"`;
   await exec.exec(cmd);
  
   //check if downloaded successfully
