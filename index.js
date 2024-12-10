@@ -111,10 +111,7 @@ async function run(){
 
     // add final binary to PATH specifically
     await addBinToPath(fullPathBin);
-    console.log('Current PATH:', process.env.PATH);
     
-    await exec.exec('which',[bin]);
-
     // run 'func version'
     await exec.exec(`${bin} version`);
 
