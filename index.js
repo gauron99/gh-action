@@ -109,9 +109,11 @@ async function run(){
 
     // add final binary to PATH specifically
     await addBinToPath(fullPathBin);
+    
+    await exec.exec(`which ${bin}`)
 
     // run 'func version'
-    //exec.exec(`${bin} version`);
+    await exec.exec(`${bin} version`);
 
   } catch (error) {
     core.setFailed(error.message);
