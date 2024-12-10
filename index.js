@@ -123,7 +123,7 @@ async function run(){
     cmdConstrunctAndRun(url,bin);
    
     // move to destination if aplicable
-    fullPathBin = moveToDestination(bin);
+    fullPathBin = await moveToDestination(bin)
 
     // add final binary to PATH specifically
     addBinToPath(fullPathBin);
