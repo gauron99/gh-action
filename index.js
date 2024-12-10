@@ -49,7 +49,7 @@ function smartVersionUpdate(version){
 }
 
 // construct the cmd to download the func binary, run it, set as executable
-async function cmdConstrunctAndRun(url,bin){
+async function cmdConstructAndRun(url,bin){
   // construct command
   const cmd = `curl -LJO "${url}"`;
   // execute
@@ -60,9 +60,6 @@ async function cmdConstrunctAndRun(url,bin){
   if (!fs.existsSync(binPath)){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
-
-  await exec.exec('pwd')
-  await exec.exec('ls -l')
 }
 
 /**
@@ -107,9 +104,9 @@ async function run(){
   
     // if not user-defined, use GH Runner determination
     if (bin == "" || bin == undefined){
-      bin = getBinName()
+      bin = getBinName();
       if (bin == "unknown"){
-        core.setFailed("Invalid bin determination, got unknown")
+        core.setFailed("Invalid bin determination, got unknown");
       }
     }
 
@@ -119,11 +116,11 @@ async function run(){
     console.log(`URL: ${url}`);
 	
     // construct, run and set as executable from now on
-    cmdConstrunctAndRun(url,bin);
+    cmdConstructAndRun(url,bin);
    
     // move to destination if aplicable
-    fullPathBin = await moveToDestination(bin)
-
+    fullPathBin = await moveToDestination(bin);
+    await exec.exec(`pwd && ls -la`)
     await exec.exec(`chmod +x ${fullPathBin}`);
 
     // add final binary to PATH specifically
