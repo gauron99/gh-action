@@ -64,11 +64,11 @@ async function cmdConstructAndRun(url,binPath){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
 
-  await exec.exec(`chmod +x ${fullPathBin}`);
+  await exec.exec(`chmod +x ${binPath}`);
 }
 
 /**
- * @param {string} binPath 
+ * @param {string} binPath - full path to Func binary
  *  */ 
 async function addBinToPath(binPath){
     // Add the directory to PATH
@@ -113,8 +113,8 @@ async function run(){
     // so it can be used bo subsequent 'runs'
     await addBinToPath(fullPathBin);
     
-    // run 'func version'
-    await exec.exec(`${fullPathBin} version`);
+    // run 'func version' as a test
+    await exec.exec(`${bin} version`);
 
   } catch (error) {
     core.setFailed(error.message);
