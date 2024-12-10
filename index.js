@@ -65,7 +65,8 @@ async function cmdConstrunctAndRun(url,bin){
   await exec.exec(`chmod +x ${bin}`);
 }
 
-// move func binary where desired
+// move func binary to desired destination (if any) and return the full path
+// of said binary. If not moved, return its full path at the current location.
 async function moveToDestination(bin){
   console.log("movetoDest");
   const destination = core.getInput('destination');
@@ -75,16 +76,15 @@ async function moveToDestination(bin){
     await exec.exec(`mv ${bin} ${destination}`);
   
     if (fs.statSync(destination).isDirectory()) {
-      return destination + bin;
+      return path.join(destination,bin);
     }
     return destination;
   }
-  return bin;
+  return path.join(process.cwd(),bin);
 }
 
-// add func binary to PATH
-function addBinToPath(bin){
-  binPath = path.join(path.resolve('.'),bin);
+// add func binary to PATH (binPath includes the full path of the binary)
+function addBinToPath(binPath){
   if(!process.env.PATH.includes(binPath)){
     process.env.PATH= `${binPath}${path.delimiter}${process.env.PATH}`;
     core.info(`${binPath} added to $PATH`);
@@ -115,14 +115,16 @@ async function run(){
     // construct, run and set as executable from now on
     cmdConstrunctAndRun(url,bin)
    
-    // add final binary to PATH specifically
-    addBinToPath(bin)
-
     // move to destination if aplicable
-    finalBin = moveToDestination(bin)
+    fullPathBin = moveToDestination(bin)
+
+    // add final binary to PATH specifically
+    addBinToPath(fullPathBin)
+
+    bin = path.basename(fullPathBin)
 
     // run 'func version'
-    exec.exec(`${finalBin} version`)
+    exec.exec(`${bin} version`)
 
   } catch (error) {
     core.setFailed(error.message)
