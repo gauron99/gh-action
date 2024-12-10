@@ -54,7 +54,7 @@ function smartVersionUpdate(version){
  * @param {string} url - Full url to be curled
  * @param {string} binPath - Full target path of the binary
  */
-// construct the cmd to download the func binary, run it, set as executable
+// download func, set as executable
 async function cmdConstructAndRun(url,binPath){
   const cmd = `curl -L -o "${binPath}" "${url}"`;
   await exec.exec(cmd);
@@ -63,6 +63,8 @@ async function cmdConstructAndRun(url,binPath){
   if (!fs.existsSync(binPath)){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
+
+  await exec.exec(`chmod +x ${fullPathBin}`);
   await exec.exec(`ls -la`)
 }
 
@@ -109,7 +111,6 @@ async function run(){
     // download Func
     await cmdConstructAndRun(url,fullPathBin);
 
-    await exec.exec(`chmod +x ${fullPathBin}`);
 
     // add final binary to PATH specifically
     await addBinToPath(fullPathBin);
