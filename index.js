@@ -72,9 +72,9 @@ async function addBinToPath(binPath){
     // Add the directory to PATH
     // This will write to $GITHUB_PATH, making it available for subsequent steps
     fs.appendFileSync(process.env.GITHUB_PATH, `\n${binPath}`);
-    process.env.PATH = process.env.PATH + path.delimiter + binPath
-    await exec.exec(`echo $PATH`)
-    await exec.exec(`echo $GITHUB_PATH`)
+    process.env.PATH = process.env.PATH + path.delimiter + binPath;
+    await exec.exec('echo', [`$PATH`], {shell: 'bash'});
+    await exec.exec('echo', [`$GITHUB_PATH`], { shell: 'bash'});
     core.info(`${binPath} added to $PATH`);
 }
 
