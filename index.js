@@ -8,7 +8,7 @@ const fs = require('fs');
 const DEFAULT_FUNC_VERSION = 'knative-v1.16.1'
 
 // detect os system in Github Actions and determine binary name
-function getBinName() {
+function getOsBinName() {
   const runnerOS = process.env.RUNNER_OS;
   const runnerArch = process.env.RUNNER_ARCH;
 
@@ -71,12 +71,16 @@ async function cmdConstructAndRun(url,binPath){
  * @param {string} binPath - full path to Func binary
  *  */ 
 async function addBinToPath(binPath){
-    // Add the directory to PATH
-    // This will write to $GITHUB_PATH, making it available for subsequent steps
-    fs.appendFileSync(process.env.GITHUB_PATH, `\n${path.dirname(binPath)}`);
-    process.env.PATH = process.env.PATH + path.delimiter + path.dirname(binPath);
+  dir = path.dirname(binPath)
+  // Write to $GITHUB_PATH, making it available for subsequent steps
+  fs.appendFileSync(process.env.GITHUB_PATH, `\n${dir}`);
+
+  // add only if its not in PATH yet
+  if (!process.env.PATH.includes(dir)){
+    process.env.PATH = process.env.PATH + path.delimiter + dir;
     core.info(`${binPath} added to $PATH`);
-}
+  }
+} 
 
 // -------------------------------------------------------------------------- \\
 async function run(){
@@ -86,7 +90,7 @@ async function run(){
 
     // osBin refers to the exact name match of an existing binary available to
     // download
-    const osBin = core.getInput('binary') || getBinName();
+    const osBin = core.getInput('binary') || getOsBinName();
     if (osBin == "unknown"){
       core.setFailed("Invalid os binary determination, try setting it specifically using 'binary'");
     }
