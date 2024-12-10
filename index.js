@@ -82,7 +82,8 @@ async function moveToDestination(bin){
 
 // add func binary to PATH
 function addBinToPath(bin){
-  binPath = path.dirname(bin)
+  console.log(`addToPath>> '${bin}'`)
+  binPath = path.join(path.dirname,bin)
   if(!process.env.PATH.includes(binPath)){
     process.env.PATH= `${binPath}${path.delimiter}${process.env.PATH}`
     core.info(`${binPath} added to $PATH`)
