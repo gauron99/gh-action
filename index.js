@@ -56,10 +56,11 @@ async function cmdConstrunctAndRun(url,bin){
   await exec.exec(cmd);
  
   //check if downloaded successfully
-  binPath = path.join(process.cwd(), bin);
+  binPath = path.join(path.resolve('.'), bin);
   if (!fs.existsSync(binPath)){
     core.setFailed("Download failed, couldn't find the binary on disk");
   }
+  await exec.exec('ls')
 }
 
 /**
