@@ -65,8 +65,13 @@ async function cmdConstrunctAndRun(url,bin){
   await exec.exec(`chmod +x ${bin}`);
 }
 
-// move func binary to desired destination (if any) and return the full path
-// of said binary. If not moved, return its full path at the current location.
+/**
+ * Move func binary to desired destination (if any) and return the full path
+ * of said binary. If not moved, return its full path at the current location.
+ * 
+ * @param {string} bin - Name of the binary
+ * @returns {string} - Full path of the final binary
+ */
 async function moveToDestination(bin){
   const destination = core.getInput('destination');
   console.log(`moveToDest: ${destination}`);
@@ -79,11 +84,13 @@ async function moveToDestination(bin){
     }
     return destination;
   }
-  console.log(path.join(path.resolve('.'),bin))
   return path.join(path.resolve('.'),bin);
 }
 
-// add func binary to PATH (binPath includes the full path of the binary)
+/**
+ * add func binary to PATH (binPath includes the full path of the binary)
+ * @param {string} binPath 
+ *  */ 
 function addBinToPath(binPath){
   if(!process.env.PATH.includes(binPath)){
     process.env.PATH= `${binPath}${path.delimiter}${process.env.PATH}`;
