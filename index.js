@@ -68,9 +68,8 @@ async function cmdConstrunctAndRun(url,bin){
 // move func binary to desired destination (if any) and return the full path
 // of said binary. If not moved, return its full path at the current location.
 async function moveToDestination(bin){
-  console.log("movetoDest");
   const destination = core.getInput('destination');
-  console.log(`dest: ${destination}`);
+  console.log(`moveToDest: ${destination}`);
   if (destination != undefined && destination != "") {
     console.log(`Moving the binary to ${destination}`);
     await exec.exec(`mv ${bin} ${destination}`);
@@ -80,7 +79,7 @@ async function moveToDestination(bin){
     }
     return destination;
   }
-  return path.join(process.cwd(),bin);
+  return path.join(path.resolve('.'),bin);
 }
 
 // add func binary to PATH (binPath includes the full path of the binary)
@@ -110,24 +109,24 @@ async function run(){
     version = smartVersionUpdate(version)
 
   	var url = `https://github.com/knative/func/releases/download/${version}/${bin}`;
-    console.log(`URL: ${url}`) 
+    console.log(`URL: ${url}`);
 	
     // construct, run and set as executable from now on
-    cmdConstrunctAndRun(url,bin)
+    cmdConstrunctAndRun(url,bin);
    
     // move to destination if aplicable
-    fullPathBin = moveToDestination(bin)
+    fullPathBin = moveToDestination(bin);
 
     // add final binary to PATH specifically
-    addBinToPath(fullPathBin)
+    addBinToPath(fullPathBin);
 
-    bin = path.basename(fullPathBin)
+    bin = path.basename(fullPathBin);
 
     // run 'func version'
-    exec.exec(`${bin} version`)
+    exec.exec(`${bin} version`);
 
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed(error.message);
   }
 }
 
