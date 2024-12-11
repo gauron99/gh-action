@@ -1,4 +1,4 @@
-name: 'gauron custom GH action'
+name: 'My Kn-Func'
 description: 'This action does custom stuff for it is custom'
 inputs:
   name:
