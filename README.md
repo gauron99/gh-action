@@ -10,11 +10,11 @@ name: 'My Kn-Func'
 description: 'This action does custom stuff for it is custom'
 inputs:
   name:
-    description: '(optional) Name of the Function binary (defaults to "func"'
+    description: '(optional) Name of the Function binary. It will be available in the runner under this name(defaults to "func")'
   binary:
     description: '(optional) Binary you want to download (exact string expected), otherwise will be determined via the OS of GH Runner'
   version:
-    description: '(optional) Provide version to download'
+    description: '(optional) Provide version to download. Any version in release pages works https://github.com/knative/func/tags'
   destination:
     description: '(optional) Provide a path where to move the desired downloaded binary, otherwise cwd is used'
 runs:
