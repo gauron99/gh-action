@@ -78,7 +78,7 @@ async function addBinToPath(binPath){
   // add only if its not in PATH yet
   if (!process.env.PATH.includes(dir)){
     process.env.PATH = process.env.PATH + path.delimiter + dir;
-    core.info(`${binPath} added to $PATH`);
+    core.info(`dir ${dir} added to $PATH`);
   }
 } 
 
@@ -112,11 +112,11 @@ async function run(){
     // download Func
     await cmdConstructAndRun(url,fullPathBin);
 
-
-    // add final binary to PATH specifically and add it to GITHUB_PATH
-    // so it can be used bo subsequent 'runs'
+    // add final binary to PATH (directory where the bin is ) and add it to 
+    // GITHUB_PATH so it can be used bo subsequent 'runs'
     await addBinToPath(fullPathBin);
     
+    await exec.exec("ls -la")
     // run 'func version' as a test
     await exec.exec(`${bin} version`);
 
