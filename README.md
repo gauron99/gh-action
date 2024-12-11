@@ -5,6 +5,7 @@ You can change where you want the `func` to be downloaded with `destination` - r
 By default, uses latest version, but you can specify which one you want using `version`.
 
 `action.yml` -- action yaml with descriptions
+```yaml
 name: 'gauron custom GH action'
 description: 'This action does custom stuff for it is custom'
 inputs:
@@ -19,3 +20,4 @@ inputs:
 runs:
   using: 'node20'
   main: 'index.js'
+```
